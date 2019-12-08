@@ -63,7 +63,7 @@ mv private.key private.or.key
 openssl rsa -in private.or.key -out private.key
 openssl x509 -req -days 3650 -in private.csr -signkey private.key -out private.crt
 
-cat > /usr/src/trojan/server.conf <<-EOF
+cat > /usr/src/trojan/trojan.conf <<-EOF
 {
     "run_type": "server",
     "local_addr": "0.0.0.0",
@@ -111,7 +111,7 @@ echo "============================"
 echo " 设置验证密码，服务端和客户端使用相同密码"
 echo "============================"
 read -p "设置密码：" mypassword
-sed -i "s/password1/$mypassword/" /usr/src/trojan/server.conf
+sed -i "s/password1/$mypassword/" /usr/src/trojan/trojan.conf
 
 }
 
@@ -120,7 +120,8 @@ start_docker(){
         sudo firewall-cmd --zone=public --add-port=80/tcp --permanent
 	sudo firewall-cmd --zone=public --add-port=443/tcp --permanent
 	sudo firewall-cmd --reload
-	docker run --name trojan --restart=always -d -p 80:80 -p 443:443 -v /usr/src/trojan:/usr/src/trojan  atrandys/trojan sh -c "/etc/init.d/nginx start && trojan -c /usr/src/trojan/server.conf"
+	docker run --name some-nginx --restart=always -d -p 80:80 nginx
+	docker run --name trojan --restart=always -d  -p 443:443 -v /usr/src/trojan:/config  trojangfw/trojan
 	echo "============================"
 	echo "       trojan启动完成"
 	echo "============================"
@@ -141,7 +142,6 @@ start_menu(){
     read -p "请输入数字:" num
     case "$num" in
     	1)
-	install_docker
 	config_trojan
 	config_website
 	start_docker
