@@ -121,7 +121,8 @@ start_docker(){
 	sudo firewall-cmd --zone=public --add-port=443/tcp --permanent
 	sudo firewall-cmd --reload
 	docker run --name some-nginx --restart=always -d -p 80:80 nginx
-	docker run --name trojan --restart=always -d  -p 443:443 -v /usr/src/trojan:/config  trojangfw/trojan
+	docker run -dt --name trojan --restart=always   -v /usr/src/trojan:/config  -p 443:443 trojangfw/trojan
+
 	echo "============================"
 	echo "       trojan启动完成"
 	echo "============================"
