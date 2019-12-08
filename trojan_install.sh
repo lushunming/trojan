@@ -63,7 +63,7 @@ mv private.key private.or.key
 openssl rsa -in private.or.key -out private.key
 openssl x509 -req -days 3650 -in private.csr -signkey private.key -out private.crt
 
-cat > /usr/src/trojan/trojan.conf <<-EOF
+cat > /usr/src/trojan/config.json <<-EOF
 {
     "run_type": "server",
     "local_addr": "0.0.0.0",
@@ -111,7 +111,7 @@ echo "============================"
 echo " 设置验证密码，服务端和客户端使用相同密码"
 echo "============================"
 read -p "设置密码：" mypassword
-sed -i "s/password1/$mypassword/" /usr/src/trojan/trojan.conf
+sed -i "s/password1/$mypassword/" /usr/src/trojan/config.json
 
 }
 
